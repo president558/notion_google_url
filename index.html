@@ -52,17 +52,17 @@
               Notion × Googleドライブ ハイブリッドマスター
             </h1>
             <span class="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-              v1.2
+              v1.3
             </span>
           </div>
           <p class="text-[11px] text-slate-500 font-medium">
-            格納先診断・全10アプリランチャー・Notion直貼用URLハブ生成ツール
+            格納先診断・全12アプリランチャー・Notion直貼用URLハブ生成ツール
           </p>
         </div>
       </div>
       <div class="flex items-center gap-1.5">
         <button onclick="openModal('historyModal')" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-          🆕 v1.2 更新履歴
+          🆕 v1.3 更新履歴
         </button>
       </div>
     </div>
@@ -277,10 +277,10 @@
           </div>
         </div>
 
-        <!-- Section C: Custom Web Apps Launcher (All 10 Apps) -->
+        <!-- Section C: Custom Web Apps Launcher (All 12 Apps) -->
         <div class="space-y-3 pt-3 border-t border-slate-100">
           <div class="flex flex-wrap items-center justify-between gap-1">
-            <span class="text-xs font-black text-emerald-800">🚀 C. 自作アプリ・ランチャー（GitHub Pages / Netlify 公開URL登録枠・全10アプリ）</span>
+            <span class="text-xs font-black text-emerald-800">🚀 C. 自作アプリ・ランチャー（GitHub Pages / Netlify 公開URL登録枠・全12アプリ）</span>
             <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">URLを入れたアプリだけ自動で出力されます</span>
           </div>
           <p class="text-[11px] text-slate-500">
@@ -446,9 +446,9 @@
   <footer class="bg-white border-t border-slate-200 mt-10">
     <div class="max-w-5xl mx-auto px-4 py-5 space-y-2 text-[11px] text-slate-500">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <span class="font-bold text-slate-700">Notion × Googleドライブ ハイブリッドマスター (v1.2)</span>
+        <span class="font-bold text-slate-700">Notion × Googleドライブ ハイブリッドマスター (v1.3)</span>
         <button onclick="openModal('historyModal')" class="text-indigo-600 hover:underline font-bold">
-          📋 更新履歴（リリースノート）を見る (v1.2)
+          📋 更新履歴（リリースノート）を見る (v1.3)
         </button>
       </div>
       <p class="leading-relaxed">
@@ -468,9 +468,20 @@
         <button onclick="closeModal('historyModal')" class="text-slate-400 hover:text-slate-700 font-bold text-lg leading-none">&times;</button>
       </div>
       <div class="space-y-3 text-xs max-h-[65vh] overflow-y-auto pr-1">
+        <div class="p-3 rounded-xl bg-amber-50/80 border border-amber-200">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-black">v1.3 NEW</span>
+            <span class="font-bold text-slate-800">全12アプリ完全網羅アップデート</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
+            <li>自作アプリ・ランチャーに「🗂️ Googleドライブ 整理マスター」を追加</li>
+            <li>自作アプリ・ランチャーに「🎥 画面録画＆スクショスタジオ」を追加</li>
+            <li>合計12個の自作アプリをNotion『🏠 HOME』から1タップ起動可能に</li>
+          </ul>
+        </div>
         <div class="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200">
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-black">v1.2 NEW</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-black">v1.2</span>
             <span class="font-bold text-slate-800">全10アプリ・ランチャー（起動基地）統合版</span>
           </div>
           <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
@@ -509,7 +520,7 @@
   </div>
 
   <script>
-    // ==================== DATA: 10 CUSTOM APPS LIST ====================
+    // ==================== DATA: 12 CUSTOM APPS LIST ====================
     const customAppsList = [
       { id: 'appDriverLog', icon: '🚚', name: '軽貨物 業務の記録簿', desc: '国交省法令準拠・日報＆確定申告', placeholder: 'https://ユーザー名.github.io/driver-log/' },
       { id: 'appDelivery', icon: '📦', name: '配達アプリ', desc: 'カメラOCR・地図ピン・在宅率分析', placeholder: 'https://ユーザー名.github.io/delivery-app/' },
@@ -519,8 +530,10 @@
       { id: 'appBudget', icon: '💰', name: '家計簿アプリ', desc: '片手10秒入力・固定費一括・収支', placeholder: 'https://ユーザー名.github.io/budget-app/' },
       { id: 'appInstachord', icon: '🎸', name: 'インスタコード作曲スタジオ', desc: '6弦パッド・コード進行・伴奏', placeholder: 'https://ユーザー名.github.io/instachord-studio/' },
       { id: 'appLyric', icon: '✍️', name: '作詞アシスト・スタジオ', desc: '音数シンクロ・Suno連携', placeholder: 'https://ユーザー名.github.io/lyric-studio/' },
-      { id: 'appGeminiAcademy', icon: '🤖', name: 'Geminiマスター・アカデミー', desc: 'AI活用＆Canvas開発体験', placeholder: 'https://ユーザー名.github.io/gemini-academy/' },
-      { id: 'appNotionOrganizer', icon: '🗂️', name: 'Notion整理・散らかり防止マスター', desc: '1ハブ4エリア・3大DB設計', placeholder: 'https://ユーザー名.github.io/notion-organizer/' }
+      { id: 'appScreenCapture', icon: '🎥', name: '画面録画＆スクショスタジオ', desc: 'PC画面録画・PNGスクショ・スマホ対応', placeholder: 'https://ユーザー名.github.io/screen-capture/' },
+      { id: 'appGdriveOrganizer', icon: '🗂️', name: 'Googleドライブ 整理マスター', desc: '黄金フォルダ00〜40・GAS自動仕分け', placeholder: 'https://ユーザー名.github.io/gdrive-organizer/' },
+      { id: 'appNotionOrganizer', icon: '📓', name: 'Notion整理・散らかり防止マスター', desc: '1ハブ4エリア・3大DB設計', placeholder: 'https://ユーザー名.github.io/notion-organizer/' },
+      { id: 'appGeminiAcademy', icon: '🤖', name: 'Geminiマスター・アカデミー', desc: 'AI活用＆Canvas開発体験', placeholder: 'https://ユーザー名.github.io/gemini-academy/' }
     ];
 
     // ==================== DATA: SORTER ITEMS ====================

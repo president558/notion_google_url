@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Notion × Googleドライブ ハイブリッド診断＆連携URLハブ生成ツール</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    }
+    .card-shadow {
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.2s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-900 via-indigo-900 to-blue-700 text-white flex items-center justify-center font-black text-base shadow-sm shrink-0">
+          N×G
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-black text-slate-900 leading-tight">
+              Notion × Googleドライブ ハイブリッドマスター
+            </h1>
+            <span class="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+              v1.2
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">
+            格納先診断・全10アプリランチャー・Notion直貼用URLハブ生成ツール
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="openModal('historyModal')" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          🆕 v1.2 更新履歴
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-5xl mx-auto px-4 pb-2.5 overflow-x-auto no-scrollbar">
+      <nav class="flex gap-1.5 min-w-max">
+        <button onclick="switchTab('tab-sorter')" id="btn-tab-sorter" class="tab-btn active px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+          <span>🧭 1. 格納先・迷いゼロ診断</span>
+        </button>
+        <button onclick="switchTab('tab-hub')" id="btn-tab-hub" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5">
+          <span>🔗 2. 連携URLハブ＆アプリ起動基地</span>
+        </button>
+        <button onclick="switchTab('tab-bridge')" id="btn-tab-bridge" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5">
+          <span>🌉 3. 3つのブリッジ実務SOP</span>
+        </button>
+        <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5">
+          <span>🏆 4. ハイブリッド定着テスト</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-5 space-y-6">
+
+    <!-- ==================== TAB 1: 格納先・迷いゼロ診断 ==================== -->
+    <section id="tab-sorter" class="tab-panel space-y-5 animate-fade-in">
+      <!-- Golden Rule Banner -->
+      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-5 shadow-md">
+        <div class="text-xs font-bold text-indigo-300 mb-1">💡 ハイブリッド運用のたった1つの黄金ルール</div>
+        <h2 class="text-lg sm:text-xl font-black leading-snug mb-2">
+          「思考・進行・リンク集」は <span class="text-amber-300 underline decoration-amber-400/60">Notion</span>、<br class="sm:hidden">
+          「重たいデータ・自動集計シート」は <span class="text-sky-300 underline decoration-sky-400/60">Googleドライブ</span>
+        </h2>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          どちらか1つに全部まとめようとすると必ず破綻します。両者の得意領域を完全に分け、Notionを「司令室・アプリ起動ポータル」、Googleドライブを「倉庫・自動集計工場」として役割分担させるのが正解です。
+        </p>
+      </div>
+
+      <!-- Interactive Sorter Tool -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="text-base font-black text-slate-900">🔍 「これ、どっちに入れる？」即時仕分け診断</h3>
+            <p class="text-xs text-slate-500">手元のデータやメモの種類をタップ（またはキーワード入力）すると、最適な格納先とフォルダ/DBを即答します。</p>
+          </div>
+          <div class="relative w-full sm:w-60">
+            <input type="text" id="sorterSearch" oninput="filterItems()" placeholder="例: 領収書, 台本, 動画..." class="w-full pl-8 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <span class="absolute left-2.5 top-2 text-slate-400 text-xs">🔎</span>
+          </div>
+        </div>
+
+        <!-- Quick Item Chips -->
+        <div id="sorterGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Diagnosis Result Box -->
+        <div id="sorterResult" class="hidden rounded-2xl border-2 p-4 transition-all">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Side-by-Side Architecture Map -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Notion Side -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-black text-sm">N</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900">Notion（頭脳・ハブ）</h4>
+                <p class="text-[11px] text-slate-500">1ハブ・4エリア ＋ 3大DB ＋ アプリ起動基地</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-1 rounded bg-amber-50 text-amber-800 border border-amber-200">テキスト・進行・リンク</span>
+          </div>
+          <ul class="space-y-2 text-xs text-slate-700">
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-slate-900">🏠 HOME（管理ハブ）：</span> サイドバー直下はこれ1つだけ。ドライブ＆自作アプリ直通リンク集を設置。
+            </li>
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-slate-900">📥 00_INBOX：</span> 思いつきの下書き・一時メモを1行ずつ追記。
+            </li>
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-slate-900">🗄️ 99_Master_DB（3大DB）：</span><br>
+              ① 全タスク管理DB ／ ② 全ナレッジ・議事録・台本DB ／ ③ 案件・プロジェクトDB
+            </li>
+            <li class="p-2.5 rounded-xl bg-rose-50/70 border border-rose-100 text-rose-800">
+              <span class="font-bold">🚫 禁止事項：</span> 重い動画・音声、大量のPDF領収書を直接アップロードしない。
+            </li>
+          </ul>
+        </div>
+
+        <!-- Google Drive Side -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-black text-sm">G</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900">Googleドライブ（倉庫・工場）</h4>
+                <p class="text-[11px] text-slate-500">黄金フォルダ（00〜40）＋ GAS自動仕分け</p>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-1 rounded bg-sky-50 text-sky-800 border border-sky-200">ファイル・シート・資産</span>
+          </div>
+          <ul class="space-y-2 text-xs text-slate-700">
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-blue-700">📁 00_INBOX：</span> とりあえず放り込む一時置き場（週次GASで自動仕分け）。
+            </li>
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-blue-700">📊 10_アプリDB・自動連携シート：</span> 業務記録・在庫・配達・家計簿のGAS連携シート。
+            </li>
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-blue-700">🧾 20_経理・確定申告_2026：</span> 領収書PDF・請求書・月次サマリー。
+            </li>
+            <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="font-bold text-blue-700">📘 30_業務マニュアル・契約 ／ 🎬 40_発信資産：</span> 契約書原本、動画MP4、サムネPNG、HTMLアプリ本体。
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: 連携URLハブ生成 ==================== -->
+    <section id="tab-hub" class="tab-panel hidden space-y-5 animate-fade-in">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base font-black text-slate-900">🔗 Notion「🏠 HOME」直貼用！連携URLハブ＆全アプリ起動基地</h2>
+            <p class="text-xs text-slate-500">
+              GoogleドライブURL・NotionエリアURL・これまで作成した全10アプリの公開URLを登録すると、NotionのHOMEに貼り付けるだけで「1クリック司令室」になるMarkdownを自動生成します。
+            </p>
+          </div>
+          <button onclick="resetHubUrls()" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 self-start sm:self-auto">
+            ↺ 入力リセット
+          </button>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-900 flex items-start gap-2">
+          <span class="text-base">🔒</span>
+          <div>
+            <strong>プライバシー保護（BYOD設計）：</strong> 入力したURLはお使いのブラウザ内（LocalStorage）にのみ保存され、外部サーバーへ送信されることは一切ありません。空欄のアプリや項目は自動で省略され、入力した分だけが綺麗に整理されて出力されます。
+          </div>
+        </div>
+
+        <!-- Section A: Google Drive URLs -->
+        <div class="space-y-2.5">
+          <div class="text-xs font-black text-blue-800 flex items-center gap-1.5">
+            <span>☁️ A. Googleドライブ側リンク（倉庫・自動集計シート）</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">🏠 ワークスペース / 事業名</label>
+              <input type="text" id="hubWorkspaceName" oninput="updateHubMarkdown()" value="River130 統合ハブ" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">☁️ Googleドライブ「マイドライブ」URL</label>
+              <input type="url" id="urlDriveRoot" oninput="updateHubMarkdown()" placeholder="https://drive.google.com/drive/my-drive" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📊 10_アプリDB・自動連携シート フォルダURL</label>
+              <input type="url" id="urlFolder10" oninput="updateHubMarkdown()" placeholder="https://drive.google.com/drive/folders/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">🧾 20_経理・確定申告_2026 フォルダURL</label>
+              <input type="url" id="urlFolder20" oninput="updateHubMarkdown()" placeholder="https://drive.google.com/drive/folders/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📘 30_業務マニュアル・契約 フォルダURL</label>
+              <input type="url" id="urlFolder30" oninput="updateHubMarkdown()" placeholder="https://drive.google.com/drive/folders/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">🎬 40_発信・コンテンツ資産 フォルダURL</label>
+              <input type="url" id="urlFolder40" oninput="updateHubMarkdown()" placeholder="https://drive.google.com/drive/folders/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">🚚 メイン業務スプレッドシートURL（軽貨物_業務記録簿_2026 等・任意）</label>
+              <input type="url" id="urlMainSheet" oninput="updateHubMarkdown()" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section B: Notion Internal Page URLs -->
+        <div class="space-y-2.5 pt-3 border-t border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-1">
+            <span class="text-xs font-black text-slate-900">🗂️ B. Notion格納エリア直通リンク（作成済みのNotionページURLを貼るとリンク化）</span>
+            <span class="text-[10px] text-slate-500">※空欄の場合はガイド付き構造リストを出力</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📂 10_進行中プロジェクト（NotionページURL）</label>
+              <input type="url" id="urlNotion10" oninput="updateHubMarkdown()" placeholder="https://www.notion.so/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📂 20_継続業務・ルーティン（NotionページURL）</label>
+              <input type="url" id="urlNotion20" oninput="updateHubMarkdown()" placeholder="https://www.notion.so/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📂 30_ナレッジ・資産・台本（NotionページURL）</label>
+              <input type="url" id="urlNotion30" oninput="updateHubMarkdown()" placeholder="https://www.notion.so/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">📂 40_完了アーカイブ（NotionページURL）</label>
+              <input type="url" id="urlNotion40" oninput="updateHubMarkdown()" placeholder="https://www.notion.so/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">⚙️ 99_Master_DB（3大データベース格納ページURL）</label>
+              <input type="url" id="urlNotion99" oninput="updateHubMarkdown()" placeholder="https://www.notion.so/..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section C: Custom Web Apps Launcher (All 10 Apps) -->
+        <div class="space-y-3 pt-3 border-t border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-1">
+            <span class="text-xs font-black text-emerald-800">🚀 C. 自作アプリ・ランチャー（GitHub Pages / Netlify 公開URL登録枠・全10アプリ）</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">URLを入れたアプリだけ自動で出力されます</span>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            これまで作成した自作アプリの公開URL（<code>https://ユーザー名.github.io/...</code> 等）を入力しておくと、Notionの『🏠 HOME』から1タップで全アプリを起動できるランチャー欄が自動生成されます。
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="appLauncherInputs">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="flex flex-wrap gap-3 pt-2 border-t border-slate-100">
+          <label class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
+            <input type="checkbox" id="optIncludeDbGuide" checked onchange="updateHubMarkdown()" class="rounded text-indigo-600 focus:ring-indigo-500">
+            <span>即戦力ビュー枠（未完了タスク・進行中案件）を含める</span>
+          </label>
+          <label class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
+            <input type="checkbox" id="optIncludeRoutine" checked onchange="updateHubMarkdown()" class="rounded text-indigo-600 focus:ring-indigo-500">
+            <span>週1回・5分メンテナンスチェックを含める</span>
+          </label>
+        </div>
+
+        <!-- Generated Markdown Preview & Copy -->
+        <div class="space-y-2 pt-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-black text-slate-800">📋 ① HOMEページ用Markdown（全体構成・直通リンク・アプリ起動基地）</span>
+            <button onclick="copyHubMarkdown()" id="copyHubBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5">
+              <span>📋 Notion用ハブをコピー</span>
+            </button>
+          </div>
+          <textarea id="hubMarkdownOutput" readonly rows="15" class="w-full p-3.5 text-xs font-mono bg-slate-900 text-slate-100 rounded-xl border border-slate-700 focus:outline-none leading-relaxed"></textarea>
+        </div>
+
+        <!-- Instant 3 Master DB Starter Tables Copy -->
+        <div class="space-y-2 pt-3 border-t border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-black text-slate-800">🗄️ ② 3大データベース「即作成スターター表」（99_Master_DB用）</span>
+              <p class="text-[11px] text-slate-500">Notionに貼り付けて表の左上「データベースに変換」を押すだけで、タスクDB・案件DB・ナレッジDBが一瞬で立ち上がります。</p>
+            </div>
+            <button onclick="copyDbStarterMarkdown()" id="copyDbBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-black shadow-sm transition flex items-center gap-1.5">
+              <span>🗄️ 3大DBスターターをコピー</span>
+            </button>
+          </div>
+          <textarea id="dbStarterOutput" readonly rows="8" class="w-full p-3 text-[11px] font-mono bg-slate-800 text-emerald-200 rounded-xl border border-slate-700 focus:outline-none leading-relaxed"></textarea>
+        </div>
+
+        <!-- How to paste guide -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5">
+          <div class="font-black">✨ すでに『🏠 HOME』にタスクビューを設定済みの方へ（安全にアプリ起動基地だけ足す方法）</div>
+          <p class="text-[11px] leading-relaxed">
+            すでに <code>🏠 HOME</code> で <code>/linked</code> ビューを設定済みの場合は、ページ全体を上書きせず、上の出力ボックス内の <strong>「<code>## 🚀 自作アプリ・ランチャー（1クリック起動基地）</code>」の部分だけを選択してコピー</strong> し、Notionの <code>🏠 HOME</code> の好きな位置へ貼り付ければ既存ビューを壊さずアプリ起動基地を追加できます！
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: 3つのブリッジ実務SOP ==================== -->
+    <section id="tab-bridge" class="tab-panel hidden space-y-5 animate-fade-in">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow space-y-5">
+        <div>
+          <h2 class="text-base font-black text-slate-900">🌉 3つのツール群を連動させる「3つのブリッジ（架け橋）運用」</h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Notion（司令室）・自作Webアプリ群（現場入力）・Googleドライブ（倉庫・自動集計）をシームレスに繋ぐ実務手順です。
+          </p>
+        </div>
+
+        <!-- Bridge 1 -->
+        <div class="rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-black">ブリッジ ①</span>
+            <h3 class="font-black text-sm text-slate-900">Notionの「HOME＆案件ページ」から自作アプリ＆ドライブへ1タップ起動</h3>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed">
+            スマホでもPCでも、まずはNotionの<code>🏠 HOME</code>を開きます。そこにある「🚀 自作アプリ・ランチャー」から業務記録・配達・在庫・家計簿・作曲スタジオを起動し、案件ページにはGoogleドライブの該当フォルダURLを1行貼っておきます。
+          </p>
+          <div class="bg-white rounded-xl p-3 border border-indigo-100 text-[11px] text-slate-600">
+            <strong>🚀 効果：</strong> ブラウザのブックマークが散らばらず、「まずNotionを開けば全アプリと全フォルダへ行ける」コックピットが完成します。
+          </div>
+        </div>
+
+        <!-- Bridge 2 -->
+        <div class="rounded-2xl border border-sky-100 bg-sky-50/40 p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-600 text-white text-[11px] font-black">ブリッジ ②</span>
+            <h3 class="font-black text-sm text-slate-900">現場アプリ自動蓄積は「ドライブ（シート）」、経営振り返りは「Notion」</h3>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed">
+            現場のWebアプリから送信されたデータは、すべてGoogleドライブの<code>10_アプリDB・自動連携シート</code>へ全自動で溜まります。Notion側にはスプレッドシートのURLだけをリンクしておき、月1回の振り返りメモだけをNotionの「② ナレッジ・議事録DB」に書きます。
+          </p>
+          <div class="bg-white rounded-xl p-3 border border-sky-100 text-[11px] text-slate-600">
+            <strong>🚀 効果：</strong> Notionに重たい表計算データを無理やり作る必要がなくなり、確定申告用の自動集計（SUMIFS）と経営判断を綺麗に分離できます。
+          </div>
+        </div>
+
+        <!-- Bridge 3 -->
+        <div class="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] font-black">ブリッジ ③</span>
+            <h3 class="font-black text-sm text-slate-900">確定申告・PDF領収書は「ドライブへ直行」＋「Notionはタスクのみ」</h3>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed">
+            レシート画像・請求書PDF・契約書原本は一切Notionにアップロードせず、直接Googleドライブの<code>20_経理・確定申告_2026</code>または<code>30_業務マニュアル・契約</code>へ保存します（ファイル名：<code>YYYYMMDD_取引先_金額</code>）。Notion側では「① 全タスク管理DB」に「月次経理チェック」の繰り返しタスクだけを置きます。
+          </p>
+          <div class="bg-white rounded-xl p-3 border border-emerald-100 text-[11px] text-slate-600">
+            <strong>🚀 効果：</strong> Notion無料プランのファイル容量制限（1ファイル5MB制限）に引っかかるストレスが永久になくなります。
+          </div>
+        </div>
+
+        <!-- Weekly Routine -->
+        <div class="rounded-2xl bg-slate-900 text-white p-4 space-y-2.5">
+          <div class="text-xs font-black text-amber-300">🧹 リバウンドしない「週1回・5分メンテナンス」ルーティン</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <div class="font-bold text-sky-300 mb-1">⚡ Googleドライブ側（全自動・0分）</div>
+              <p class="text-[11px] text-slate-300">
+                構築済みのGASロボット（<code>autoOrganizeGoogleDrive</code>）の週次トリガーにより、日曜夜にマイドライブ直下のファイルが自動で<code>10〜40</code>フォルダへ振り分けられます。
+              </p>
+            </div>
+            <div class="bg-slate-800/80 rounded-xl p-3 border border-slate-700">
+              <div class="font-bold text-amber-300 mb-1">📝 Notion側（手動・週末5分）</div>
+              <p class="text-[11px] text-slate-300">
+                ① <code>00_INBOX</code>の箇条書きメモを「② ナレッジDB」へ移しタグを1つ付ける。<br>
+                ② 完了した案件を「完了（アーカイブ）」ステータスに変更する。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: ハイブリッド定着テスト ==================== -->
+    <section id="tab-quiz" class="tab-panel hidden space-y-5 animate-fade-in">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 card-shadow space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 class="text-base font-black text-slate-900">🏆 ハイブリッド運用・実務認定テスト（全4問）</h2>
+            <p class="text-xs text-slate-500">迷わず使いこなすための4つの鉄則を確認しましょう。全問正解でマスター認定バッジが点灯します！</p>
+          </div>
+          <div id="quizScoreBadge" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-black">
+            進捗: 0 / 4 問正解
+          </div>
+        </div>
+
+        <div id="quizContainer" class="space-y-4">
+          <!-- Populated by JS -->
+        </div>
+
+        <div id="quizMasterBanner" class="hidden rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 text-center shadow-md">
+          <div class="text-2xl mb-1">🎉🏆🎉</div>
+          <div class="font-black text-base">全問正解！Notion × Googleドライブ ハイブリッドマスター認定！</div>
+          <p class="text-xs text-amber-50 mt-1">
+            「思考とリンクはNotion、重たいデータと自動集計シートはGoogleドライブ」の黄金ルールが完全に定着しました！
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer & Legal Disclaimer -->
+  <footer class="bg-white border-t border-slate-200 mt-10">
+    <div class="max-w-5xl mx-auto px-4 py-5 space-y-2 text-[11px] text-slate-500">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="font-bold text-slate-700">Notion × Googleドライブ ハイブリッドマスター (v1.2)</span>
+        <button onclick="openModal('historyModal')" class="text-indigo-600 hover:underline font-bold">
+          📋 更新履歴（リリースノート）を見る (v1.2)
+        </button>
+      </div>
+      <p class="leading-relaxed">
+        ※本ツールは個人の業務効率化および学習支援を目的として制作された<strong>非公式サポートツール</strong>であり、Notion Labs, Inc. および Google LLC とは一切関係ありません。
+      </p>
+      <p class="leading-relaxed">
+        ※【データ保存・免責事項】入力されたURL・設定データはすべてご利用者様のブラウザ内（LocalStorage）にのみ保存され、外部サーバーへ送信・収集されることはありません。本ツールの利用や設定変更により生じた損害等について、制作者は一切の責任を負いかねますので、重要なデータのリンク設定や整理はご自身の責任において行ってください。
+      </p>
+    </div>
+  </footer>
+
+  <!-- Release Notes Modal -->
+  <div id="historyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4" onclick="if(event.target===this) closeModal('historyModal')">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-black text-sm text-slate-900">📋 更新履歴（リリースノート）</h3>
+        <button onclick="closeModal('historyModal')" class="text-slate-400 hover:text-slate-700 font-bold text-lg leading-none">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs max-h-[65vh] overflow-y-auto pr-1">
+        <div class="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-black">v1.2 NEW</span>
+            <span class="font-bold text-slate-800">全10アプリ・ランチャー（起動基地）統合版</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
+            <li>業務DX・家庭管理・音楽制作・学習アカデミーの全10自作アプリURL登録枠を追加</li>
+            <li>URLを入力したアプリだけが自動でNotion用Markdownの「🚀 自作アプリ・ランチャー」欄へ整形出力</li>
+            <li>Notion『🏠 HOME』を開けば全アプリと全Googleドライブへ1クリックで飛べる完全統合コックピットに対応</li>
+          </ul>
+        </div>
+        <div class="p-3 rounded-xl bg-indigo-50/70 border border-indigo-100">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-black">v1.1</span>
+            <span class="font-bold text-slate-800">実戦司令室アップデート（ハブ即戦力化対応）</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
+            <li>「00_INBOX」を思いつきを1行ずつ追記できる箇条書きリスト形式へ改善</li>
+            <li>Notion格納エリア（10〜40・99_Master_DB）のページURL入力＆直通リンク生成に対応</li>
+            <li>コピペして即「データベースに変換」できる『3大DBスターター表』ワンタップコピーを追加</li>
+          </ul>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded bg-slate-600 text-white text-[10px] font-black">v1.0</span>
+            <span class="font-bold text-slate-800">初回リリース（ハイブリッド統合版）</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
+            <li>9種類の実務データ別「格納先・迷いゼロ即時診断」を搭載</li>
+            <li>GoogleドライブURLを埋め込んだ「Notion HOME用Markdown生成機」を実装</li>
+            <li>3つのブリッジ実務SOP・週5分メンテナンス手順・定着確認テストを収録</li>
+          </ul>
+        </div>
+      </div>
+      <button onclick="closeModal('historyModal')" class="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">
+        閉じる
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DATA: 10 CUSTOM APPS LIST ====================
+    const customAppsList = [
+      { id: 'appDriverLog', icon: '🚚', name: '軽貨物 業務の記録簿', desc: '国交省法令準拠・日報＆確定申告', placeholder: 'https://ユーザー名.github.io/driver-log/' },
+      { id: 'appDelivery', icon: '📦', name: '配達アプリ', desc: 'カメラOCR・地図ピン・在宅率分析', placeholder: 'https://ユーザー名.github.io/delivery-app/' },
+      { id: 'appInventory', icon: '🏭', name: '備品・在庫管理', desc: 'QRスキャン・入出庫・自動発注', placeholder: 'https://ユーザー名.github.io/inventory-app/' },
+      { id: 'appKyt', icon: '🦺', name: 'KYT・安全教育記録', desc: '軽貨物危険予知・A4記録書', placeholder: 'https://ユーザー名.github.io/kyt-app/' },
+      { id: 'appPantry', icon: '🏠', name: 'おうちストック管理', desc: '家庭の食材・日用品・防災備蓄', placeholder: 'https://ユーザー名.github.io/home-pantry/' },
+      { id: 'appBudget', icon: '💰', name: '家計簿アプリ', desc: '片手10秒入力・固定費一括・収支', placeholder: 'https://ユーザー名.github.io/budget-app/' },
+      { id: 'appInstachord', icon: '🎸', name: 'インスタコード作曲スタジオ', desc: '6弦パッド・コード進行・伴奏', placeholder: 'https://ユーザー名.github.io/instachord-studio/' },
+      { id: 'appLyric', icon: '✍️', name: '作詞アシスト・スタジオ', desc: '音数シンクロ・Suno連携', placeholder: 'https://ユーザー名.github.io/lyric-studio/' },
+      { id: 'appGeminiAcademy', icon: '🤖', name: 'Geminiマスター・アカデミー', desc: 'AI活用＆Canvas開発体験', placeholder: 'https://ユーザー名.github.io/gemini-academy/' },
+      { id: 'appNotionOrganizer', icon: '🗂️', name: 'Notion整理・散らかり防止マスター', desc: '1ハブ4エリア・3大DB設計', placeholder: 'https://ユーザー名.github.io/notion-organizer/' }
+    ];
+
+    // ==================== DATA: SORTER ITEMS ====================
+    const sorterItems = [
+      {
+        id: 'receipt',
+        icon: '🧾',
+        name: '領収書・レシート画像 / 請求書PDF',
+        keywords: '領収書 レシート 請求書 確定申告 経費 pdf',
+        dest: 'drive',
+        place: 'Googleドライブ ＞ 20_経理・確定申告_2026',
+        reason: 'PDFや画像をNotionに大量保存すると動作が重くなり無料枠の制限にも引っかかります。ドライブへ直接保存し、ファイル名を「YYYYMMDD_取引先_金額」にしておけば税務調査や確定申告も一瞬で検索できます。',
+        bridge: 'Notionの「① 全タスク管理DB」には「月次経理チェック」というタスクだけを置きます。'
+      },
+      {
+        id: 'gas_sheet',
+        icon: '📊',
+        name: '業務記録・配達・在庫・家計簿の集計シート',
+        keywords: 'スプレッドシート 業務記録 配達 在庫 家計簿 自動集計 gas appsheet',
+        dest: 'drive',
+        place: 'Googleドライブ ＞ 10_アプリDB・自動連携シート',
+        reason: 'CanvasアプリからのGAS自動送信やSUMIFS自動集計、AppSheet連携はGoogleスプレッドシートの独壇場です。',
+        bridge: 'Notionの「HOME」および該当案件ページに、このスプレッドシートのURLをブックマーク貼付しておきます。'
+      },
+      {
+        id: 'script',
+        icon: '📝',
+        name: 'YouTube台本・note記事の下書き・企画メモ',
+        keywords: '台本 記事 note youtube 企画 プロット 下書き アイデア メモ',
+        dest: 'notion',
+        place: 'Notion ＞ ② 全ナレッジ・メモDB（タグ：台本 / 記事）',
+        reason: '見出し・トグル・チェックリストを使った文章の推敲や構成組み立てはNotionが圧倒的に快適です。',
+        bridge: '完成して書き出した動画MP4やサムネイルPNGは、Googleドライブの「40_発信・コンテンツ資産」へ格納します。'
+      },
+      {
+        id: 'video_mp4',
+        icon: '🎬',
+        name: '収録済みの動画データ（MP4）・サムネ画像（PNG）',
+        keywords: '動画 mp4 画像 png サムネイル 音声 wav 録画 canva',
+        dest: 'drive',
+        place: 'Googleドライブ ＞ 40_発信・コンテンツ資産',
+        reason: '容量の大きい動画・画像・音声ファイルはGoogleドライブの倉庫に保管するのが鉄則です。',
+        bridge: 'Notionの「③ 案件・プロジェクトDB」の各動画ページ内に、ドライブ側の素材フォルダURLを1行貼っておきます。'
+      },
+      {
+        id: 'todo',
+        icon: '✅',
+        name: '今日やること・今月のタスク・買い物リスト',
+        keywords: 'タスク todo やること 予定 期限 リスト',
+        dest: 'notion',
+        place: 'Notion ＞ ① 全タスク管理DB',
+        reason: '進行ステータス管理や案件との紐付け（リレーション）はNotionのデータベースが最適です。',
+        bridge: 'HOME画面にリンクドビューで「未完了のタスクだけ」を表示させておけば毎日迷いません。'
+      },
+      {
+        id: 'minutes',
+        icon: '🤝',
+        name: '打ち合わせ議事録・AI壁打ちの決定事項まとめ',
+        keywords: '議事録 会議 打ち合わせ 決定事項 事業メモ',
+        dest: 'notion',
+        place: 'Notion ＞ ② 全ナレッジ・メモDB（タグ：議事録）',
+        reason: 'テキスト検索性が高く、後から関連タスクや案件へすぐリンクできるためNotionに集約します。',
+        bridge: '議事録の中で参照した資料PDFがある場合は、ドライブのURLリンクだけを貼ります。'
+      },
+      {
+        id: 'contract',
+        icon: '📑',
+        name: '業務委託契約書・車検証コピー・規約PDF原本',
+        keywords: '契約書 車検証 規約 マニュアル 原本 pdf',
+        dest: 'drive',
+        place: 'Googleドライブ ＞ 30_業務マニュアル・契約・規程',
+        reason: '法的効力のある原本PDFやスキャンデータは、フォルダ権限管理とバックアップが堅牢なGoogleドライブに保管します。',
+        bridge: '現場で頻繁に見返す手順書だけは、Notionにテキスト要約を作り原本リンクを添えます。'
+      },
+      {
+        id: 'html_app',
+        icon: '💻',
+        name: '自作Webアプリの公開URL・起動リンク',
+        keywords: 'html アプリ コード バックアップ github ランチャー',
+        dest: 'notion',
+        place: 'Notion ＞ 🏠 HOME「🚀 自作アプリ・ランチャー」',
+        reason: 'HTMLファイルのバックアップ自体はGoogleドライブの「40_発信資産」へ置き、毎日スマホやPCから起動するリンク集はNotionのHOMEにまとめるのが最速です。',
+        bridge: 'タブ2「連携URLハブ＆アプリ起動基地」から全10アプリのリンク集を一括生成できます。'
+      },
+      {
+        id: 'inbox_temp',
+        icon: '📥',
+        name: '分類に迷う一時的な思いつき・未整理ファイル',
+        keywords: '一時 迷う 未整理 とりあえず inbox',
+        dest: 'both',
+        place: 'テキストなら Notion「00_INBOX」 ／ ファイルなら Drive「00_INBOX」',
+        reason: '作業中に「どこに入れよう？」と10秒以上迷ったら、思考を止めずにそれぞれの「00_INBOX」へ放り込みます。',
+        bridge: 'Drive側は週次GASロボットが自動仕分けし、Notion側は週末5分でタグ付け整理します。'
+      }
+    ];
+
+    // ==================== DATA: QUIZ ====================
+    const quizQuestions = [
+      {
+        q: 'Q1. レシート画像や確定申告用の請求書PDFは、どちらに保存するのが正解？',
+        options: [
+          'Notionのページに毎回PDFを貼り付けて保存する',
+          'Googleドライブの「20_経理・確定申告_2026」へ直接保存する',
+          '両方まったく同じPDFをコピーして保存する'
+        ],
+        answer: 1,
+        explanation: '正解！PDFや画像はGoogleドライブの「20_経理・確定申告_2026」へ直接入れ、Notionには月次チェックのタスクだけを置くことで動作重化と重複を防ぎます。'
+      },
+      {
+        q: 'Q2. NotionとGoogleドライブ・自作アプリ群を往復する手間をなくす方法は？',
+        options: [
+          'NotionのHOMEに、Googleドライブや自作アプリのURLリンク集を貼って司令室にする',
+          '毎回GoogleドライブやGitHubを開いて深い階層から検索し直す',
+          'Googleドライブのフォルダを全部削除する'
+        ],
+        answer: 0,
+        explanation: '正解！NotionのHOMEにドライブやアプリのURLを貼っておくことで、Notionを「司令室」として1クリックで全ツール・全データへアクセスできます。'
+      },
+      {
+        q: 'Q3. Notionでデータベース（表）を作るとき、散らからないための鉄則は？',
+        options: [
+          '新しい案件や月が変わるたびに、新しいデータベースをどんどん作る',
+          'データベースは一切使わず、白紙ページだけをルート階層に並べる',
+          '「タスク・ナレッジ・案件」の3大DBだけに集約し、リンクドビューで切り出して使う'
+        ],
+        answer: 2,
+        explanation: '正解！大元のデータベースを3つだけに絞ることで、横断検索性と整理された状態を一生キープできます。'
+      },
+      {
+        q: 'Q4. 作業中に「これどっちに入れよう？」と10秒以上迷ったときの正しい行動は？',
+        options: [
+          '完璧な分類ルールをその場で1時間かけて考え直す',
+          'テキストならNotionの「00_INBOX」、ファイルならDriveの「00_INBOX」へ一旦放り込む',
+          'デスクトップにそのまま放置する'
+        ],
+        answer: 1,
+        explanation: '正解！まずは「00_INBOX」に一時避難させて目の前の作業に集中し、DriveはGAS自動仕分け・Notionは週末5分で片付けるのがリバウンドゼロの秘訣です。'
+      }
+    ];
+
+    let quizAnswers = {};
+
+    // ==================== TAB NAVIGATION ====================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.add('bg-slate-100', 'text-slate-700');
+      });
+      const activeBtn = document.getElementById('btn-' + tabId);
+      activeBtn.classList.add('active');
+      activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+    }
+
+    // ==================== TAB 1: SORTER LOGIC ====================
+    function renderSorterItems(filterText = '') {
+      const grid = document.getElementById('sorterGrid');
+      const query = filterText.trim().toLowerCase();
+      const filtered = sorterItems.filter(item =>
+        !query ||
+        item.name.toLowerCase().includes(query) ||
+        item.keywords.toLowerCase().includes(query) ||
+        item.place.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-6 text-xs text-slate-400">該当する項目が見つかりません。「領収書」「台本」「動画」「タスク」などで検索してみてください。</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <button onclick="selectSorterItem('${item.id}')" class="text-left p-3 rounded-xl border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition flex items-start gap-2.5 bg-slate-50/50">
+          <span class="text-lg leading-none mt-0.5">${item.icon}</span>
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-bold text-slate-900 leading-snug">${item.name}</div>
+            <div class="text-[10px] font-bold mt-1 ${item.dest === 'notion' ? 'text-amber-700' : item.dest === 'drive' ? 'text-blue-700' : 'text-purple-700'}">
+              ${item.dest === 'notion' ? '➔ Notionへ' : item.dest === 'drive' ? '➔ Googleドライブへ' : '➔ 種類別に00_INBOXへ'}
+            </div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function filterItems() {
+      const val = document.getElementById('sorterSearch').value;
+      renderSorterItems(val);
+    }
+
+    function selectSorterItem(id) {
+      const item = sorterItems.find(i => i.id === id);
+      if (!item) return;
+
+      const box = document.getElementById('sorterResult');
+      box.classList.remove('hidden', 'border-amber-300', 'bg-amber-50/60', 'border-blue-300', 'bg-blue-50/60', 'border-purple-300', 'bg-purple-50/60');
+
+      let badgeHtml = '';
+      if (item.dest === 'notion') {
+        box.classList.add('border-amber-300', 'bg-amber-50/60');
+        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-slate-900 text-amber-300 text-[11px] font-black">格納先：Notion（頭脳・ハブ）</span>`;
+      } else if (item.dest === 'drive') {
+        box.classList.add('border-blue-300', 'bg-blue-50/60');
+        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-[11px] font-black">格納先：Googleドライブ（倉庫・工場）</span>`;
+      } else {
+        box.classList.add('border-purple-300', 'bg-purple-50/60');
+        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-[11px] font-black">格納先：両ツールの 00_INBOX</span>`;
+      }
+
+      box.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">${item.icon}</span>
+            <span class="font-black text-sm text-slate-900">${item.name}</span>
+          </div>
+          ${badgeHtml}
+        </div>
+        <div class="text-xs font-black text-slate-800 bg-white/90 px-3 py-2 rounded-lg border border-slate-200/80 mb-2">
+          📍 具体的な置き場所： <span class="text-indigo-700">${item.place}</span>
+        </div>
+        <p class="text-xs text-slate-700 leading-relaxed mb-2">
+          <strong>【理由】</strong> ${item.reason}
+        </p>
+        <div class="text-[11px] text-slate-600 bg-white/70 px-3 py-1.5 rounded-lg">
+          <strong>🌉 ブリッジ連携：</strong> ${item.bridge}
+        </div>
+      `;
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ==================== TAB 2: URL HUB GENERATOR ====================
+    const STORAGE_KEY = 'river130_hybrid_hub_urls_v1_2';
+
+    function renderAppLauncherInputs() {
+      const container = document.getElementById('appLauncherInputs');
+      if (!container) return;
+      container.innerHTML = customAppsList.map(app => `
+        <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+          <label class="block text-xs font-bold text-slate-800 mb-0.5">${app.icon} ${app.name} <span class="text-[10px] font-normal text-slate-500">（${app.desc}）</span></label>
+          <input type="url" id="${app.id}" oninput="updateHubMarkdown()" placeholder="${app.placeholder}" class="w-full px-2.5 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+      `).join('');
+    }
+
+    function loadHubData() {
+      renderAppLauncherInputs();
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (saved.workspace) document.getElementById('hubWorkspaceName').value = saved.workspace;
+        if (saved.driveRoot) document.getElementById('urlDriveRoot').value = saved.driveRoot;
+        if (saved.folder10) document.getElementById('urlFolder10').value = saved.folder10;
+        if (saved.folder20) document.getElementById('urlFolder20').value = saved.folder20;
+        if (saved.folder30) document.getElementById('urlFolder30').value = saved.folder30;
+        if (saved.folder40) document.getElementById('urlFolder40').value = saved.folder40;
+        if (saved.mainSheet) document.getElementById('urlMainSheet').value = saved.mainSheet;
+        if (saved.notion10) document.getElementById('urlNotion10').value = saved.notion10;
+        if (saved.notion20) document.getElementById('urlNotion20').value = saved.notion20;
+        if (saved.notion30) document.getElementById('urlNotion30').value = saved.notion30;
+        if (saved.notion40) document.getElementById('urlNotion40').value = saved.notion40;
+        if (saved.notion99) document.getElementById('urlNotion99').value = saved.notion99;
+
+        customAppsList.forEach(app => {
+          const el = document.getElementById(app.id);
+          if (el && saved[app.id]) el.value = saved[app.id];
+        });
+      } catch (e) {}
+      updateHubMarkdown();
+      renderDbStarterMarkdown();
+    }
+
+    function saveHubData() {
+      const data = {
+        workspace: document.getElementById('hubWorkspaceName').value,
+        driveRoot: document.getElementById('urlDriveRoot').value,
+        folder10: document.getElementById('urlFolder10').value,
+        folder20: document.getElementById('urlFolder20').value,
+        folder30: document.getElementById('urlFolder30').value,
+        folder40: document.getElementById('urlFolder40').value,
+        mainSheet: document.getElementById('urlMainSheet').value,
+        notion10: document.getElementById('urlNotion10').value,
+        notion20: document.getElementById('urlNotion20').value,
+        notion30: document.getElementById('urlNotion30').value,
+        notion40: document.getElementById('urlNotion40').value,
+        notion99: document.getElementById('urlNotion99').value
+      };
+      customAppsList.forEach(app => {
+        const el = document.getElementById(app.id);
+        if (el) data[app.id] = el.value;
+      });
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function formatLinkLine(label, url, fallbackHint) {
+      const trimmed = (url || '').trim();
+      if (trimmed) {
+        return `- **${label}：** [${trimmed}](${trimmed})`;
+      }
+      return `- **${label}：** （URL未設定 / ${fallbackHint}）`;
+    }
+
+    function formatNotionAreaLine(label, url, desc) {
+      const trimmed = (url || '').trim();
+      if (trimmed) {
+        return `- 📂 **[${label}](${trimmed})** — ${desc}`;
+      }
+      return `- 📂 **${label}** — ${desc}（Notionページ作成後、ここにリンクを貼付）`;
+    }
+
+    function updateHubMarkdown() {
+      saveHubData();
+      const wsName = document.getElementById('hubWorkspaceName').value.trim() || 'River130 統合ハブ';
+      const driveRoot = document.getElementById('urlDriveRoot').value;
+      const f10 = document.getElementById('urlFolder10').value;
+      const f20 = document.getElementById('urlFolder20').value;
+      const f30 = document.getElementById('urlFolder30').value;
+      const f40 = document.getElementById('urlFolder40').value;
+      const sheet = document.getElementById('urlMainSheet').value;
+
+      const n10 = document.getElementById('urlNotion10').value;
+      const n20 = document.getElementById('urlNotion20').value;
+      const n30 = document.getElementById('urlNotion30').value;
+      const n40 = document.getElementById('urlNotion40').value;
+      const n99 = document.getElementById('urlNotion99').value;
+
+      const incDb = document.getElementById('optIncludeDbGuide').checked;
+      const incRoutine = document.getElementById('optIncludeRoutine').checked;
+
+      // Collect registered apps
+      const registeredApps = customAppsList
+        .map(app => {
+          const el = document.getElementById(app.id);
+          return { ...app, url: el ? el.value.trim() : '' };
+        })
+        .filter(app => app.url.length > 0);
+
+      let md = `# 🏠 ${wsName}\n\n`;
+      md += `> 💡 **黄金ルール：** 「思考・進行・リンク集」はNotion、「重たいデータ・自動集計シート」はGoogleドライブへ格納する。\n\n`;
+
+      if (incDb) {
+        md += `## ⚡ 今日のタスク＆進行中案件（毎日開くメインビュー）\n`;
+        md += `### ✅ 未完了タスク（① 全タスク管理DB ビュー）\n`;
+        md += `> 👆 この行を消して \`/linked\` と入力 ➔ **「① 全タスク管理DB」** を選択（フィルタ：ステータス ≠ 完了）\n\n`;
+        md += `### 🚀 進行中案件（③ 案件・プロジェクトDB ビュー）\n`;
+        md += `> 👆 この行を消して \`/linked\` と入力 ➔ **「③ 案件・プロジェクトDB」** を選択（フィルタ：状態 ＝ 進行中）\n\n`;
+        md += `---\n\n`;
+      }
+
+      // Section: Custom App Launcher (1-click launchpad)
+      md += `## 🚀 自作アプリ・ランチャー（1クリック起動基地）\n`;
+      if (registeredApps.length > 0) {
+        registeredApps.forEach(app => {
+          md += `- ${app.icon} **[${app.name}](${app.url})** — ${app.desc}\n`;
+        });
+        md += `\n`;
+      } else {
+        md += `> 💡 ハブ生成ツールの「🚀 C. 自作アプリ・ランチャー」に公開URLを入力すると、ここに1クリック起動リンク一覧が自動生成されます。\n\n`;
+      }
+
+      md += `## 📥 00_INBOX（思いつきはここに1行ずつ追記 ➔ 週1回整理）\n`;
+      md += `- （メモ1：思いついたアイデア・下書き・後で調べることを1行ずつ箇条書きで追記）\n`;
+      md += `- \n\n`;
+
+      md += `## 🌉 Googleドライブ直通ブリッジ（1クリック倉庫アクセス）\n`;
+      md += formatLinkLine('☁️ マイドライブ（全体）', driveRoot, 'drive.google.com') + '\n';
+      md += formatLinkLine('📊 10_アプリDB・自動連携シート', f10, '業務記録・在庫・配達・家計簿シート') + '\n';
+      md += formatLinkLine('🧾 20_経理・確定申告_2026', f20, '領収書PDF・請求書・月次サマリー') + '\n';
+      md += formatLinkLine('📘 30_業務マニュアル・契約・規程', f30, '契約書原本・車検証・規程PDF') + '\n';
+      md += formatLinkLine('🎬 40_発信・コンテンツ資産', f40, '動画MP4・サムネPNG・HTMLアプリ') + '\n';
+      if (sheet.trim()) {
+        md += formatLinkLine('🚚 メイン業務スプレッドシート', sheet, '直通シート') + '\n';
+      }
+
+      md += `\n## 🗄️ 格納エリア入口（4エリア ＋ マスターDB）\n`;
+      md += formatNotionAreaLine('10_進行中プロジェクト（Projects）', n10, '期限・ゴールがある企画の個別ページ') + '\n';
+      md += formatNotionAreaLine('20_継続業務・ルーティン（Areas）', n20, '軽貨物運営・経理・健康などの定常管理') + '\n';
+      md += formatNotionAreaLine('30_ナレッジ・資産・台本（Resources）', n30, 'YouTube台本・note記事・AIプロンプト集') + '\n';
+      md += formatNotionAreaLine('40_完了アーカイブ（Archives）', n40, '終了した案件・過去の記録の保管庫') + '\n';
+      md += formatNotionAreaLine('99_Master_DB（3大データベース本体）', n99, 'タスク・ナレッジ・案件の全データ倉庫') + '\n';
+
+      if (incRoutine) {
+        md += `\n## 🧹 週1回・5分メンテナンスチェック（週末リセット）\n`;
+        md += `- [ ] **Notion INBOX整理：** 上の「00_INBOX」の箇条書きを「② ナレッジDB」へ移しタグを1つ付与\n`;
+        md += `- [ ] **Notion 案件棚卸し：** 終わった案件のステータスを「完了」にしてアーカイブへ\n`;
+        md += `- [ ] **Googleドライブ確認：** 週次GASロボット（日曜夜）の自動仕分け結果を確認\n`;
+      }
+
+      document.getElementById('hubMarkdownOutput').value = md;
+    }
+
+    function renderDbStarterMarkdown() {
+      const dbMd = `# ⚙️ 99_Master_DB（3大データベース本体）\n` +
+        `> 💡 下の3つの表をそれぞれクリック ➔ 左上の「⋮⋮」メニューから **「データベースに変換」** を押すと即完成します！\n\n` +
+        `## ① 全タスク管理DB\n` +
+        `| タスク名 | ステータス | 期限 | カテゴリ | 関連案件 |\n` +
+        `| --- | --- | --- | --- | --- |\n` +
+        `| HOME画面のリンクドビュー設定 | 進行中 | 今週中 | 業務基盤 | ハイブリッドDX構築 |\n` +
+        `| 月次経理・領収書ドライブ確認 | 未着手 | 月末 | 経理 | 定常業務 |\n\n` +
+        `## ② 全ナレッジ・メモ・台本DB\n` +
+        `| タイトル | 種別タグ | 更新日 | 関連案件 |\n` +
+        `| --- | --- | --- | --- |\n` +
+        `| Notion × Googleドライブ運用ルール | マニュアル | 2026-11-19 | ハイブリッドDX構築 |\n\n` +
+        `## ③ 案件・プロジェクトDB\n` +
+        `| 案件名 | 状態 | 目標期限 | GoogleドライブフォルダURL |\n` +
+        `| --- | --- | --- | --- |\n` +
+        `| ハイブリッドDX基盤構築 | 進行中 | 2026-11-30 | （ドライブフォルダURLを貼付） |\n` +
+        `| YouTube・note発信プロジェクト | 進行中 | 継続 | （40_発信資産フォルダURLを貼付） |\n`;
+
+      const el = document.getElementById('dbStarterOutput');
+      if (el) el.value = dbMd;
+    }
+
+    function copyTextFromElement(textareaId, btnId, successLabel) {
+      const textarea = document.getElementById(textareaId);
+      const btn = document.getElementById(btnId);
+      const original = btn.innerHTML;
+
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+
+      let copied = false;
+      try {
+        copied = document.execCommand('copy');
+      } catch (e) {
+        copied = false;
+      }
+
+      const showCopiedFeedback = () => {
+        btn.innerHTML = `<span>${successLabel}</span>`;
+        btn.classList.add('!bg-emerald-600');
+        setTimeout(() => {
+          btn.innerHTML = original;
+          btn.classList.remove('!bg-emerald-600');
+        }, 2500);
+      };
+
+      if (copied) {
+        showCopiedFeedback();
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textarea.value)
+          .then(showCopiedFeedback)
+          .catch(() => {
+            btn.innerHTML = '<span>⚠️ 枠内を選択しました（Ctrl+Cでコピー）</span>';
+            setTimeout(() => { btn.innerHTML = original; }, 3000);
+          });
+      }
+    }
+
+    function copyHubMarkdown() {
+      copyTextFromElement('hubMarkdownOutput', 'copyHubBtn', '✅ コピー完了！HOMEへ貼り付けできます');
+    }
+
+    function copyDbStarterMarkdown() {
+      copyTextFromElement('dbStarterOutput', 'copyDbBtn', '✅ コピー完了！99_Master_DBへ貼り付けできます');
+    }
+
+    let resetConfirmTimer = null;
+    function resetHubUrls() {
+      const resetBtn = document.querySelector('button[onclick="resetHubUrls()"]');
+      if (resetBtn && !resetBtn.dataset.armed) {
+        resetBtn.dataset.armed = 'true';
+        const origText = resetBtn.textContent;
+        resetBtn.textContent = '⚠️ 本当にクリアしますか？（再タップで実行）';
+        resetBtn.classList.add('bg-rose-100', 'text-rose-700');
+        resetConfirmTimer = setTimeout(() => {
+          delete resetBtn.dataset.armed;
+          resetBtn.textContent = origText;
+          resetBtn.classList.remove('bg-rose-100', 'text-rose-700');
+        }, 3000);
+        return;
+      }
+
+      if (resetConfirmTimer) clearTimeout(resetConfirmTimer);
+      if (resetBtn) {
+        delete resetBtn.dataset.armed;
+        resetBtn.textContent = '↺ 入力リセット';
+        resetBtn.classList.remove('bg-rose-100', 'text-rose-700');
+      }
+
+      [
+        'urlDriveRoot', 'urlFolder10', 'urlFolder20', 'urlFolder30', 'urlFolder40',
+        'urlMainSheet',
+        'urlNotion10', 'urlNotion20', 'urlNotion30', 'urlNotion40', 'urlNotion99'
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+
+      customAppsList.forEach(app => {
+        const el = document.getElementById(app.id);
+        if (el) el.value = '';
+      });
+
+      document.getElementById('hubWorkspaceName').value = 'River130 統合ハブ';
+      updateHubMarkdown();
+    }
+
+    // ==================== TAB 4: QUIZ LOGIC ====================
+    function renderQuiz() {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = quizQuestions.map((item, qIdx) => {
+        const userAns = quizAnswers[qIdx];
+        const isAnswered = userAns !== undefined;
+        const isCorrect = userAns === item.answer;
+
+        return `
+          <div class="p-4 rounded-2xl border ${isAnswered ? (isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40') : 'border-slate-200 bg-slate-50/50'} space-y-2.5">
+            <div class="font-black text-xs sm:text-sm text-slate-900">${item.q}</div>
+            <div class="space-y-1.5">
+              ${item.options.map((opt, oIdx) => {
+                let btnStyle = 'bg-white border-slate-200 text-slate-700 hover:border-indigo-400';
+                if (isAnswered) {
+                  if (oIdx === item.answer) {
+                    btnStyle = 'bg-emerald-600 border-emerald-600 text-white font-bold';
+                  } else if (oIdx === userAns) {
+                    btnStyle = 'bg-rose-500 border-rose-500 text-white font-bold';
+                  } else {
+                    btnStyle = 'bg-white/60 border-slate-200 text-slate-400';
+                  }
+                }
+                return `
+                  <button onclick="answerQuiz(${qIdx}, ${oIdx})" class="w-full text-left px-3.5 py-2.5 rounded-xl border text-xs transition ${btnStyle}">
+                    ${opt}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+            ${isAnswered ? `
+              <div class="text-[11px] p-2.5 rounded-xl bg-white border ${isCorrect ? 'border-emerald-200 text-emerald-900' : 'border-rose-200 text-rose-900'}">
+                ${isCorrect ? '⭕ ' : '❌ '} ${item.explanation}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const correctCount = Object.keys(quizAnswers).filter(k => quizAnswers[k] === quizQuestions[k].answer).length;
+      document.getElementById('quizScoreBadge').textContent = `進捗: ${correctCount} / ${quizQuestions.length} 問正解`;
+
+      const masterBanner = document.getElementById('quizMasterBanner');
+      if (correctCount === quizQuestions.length) {
+        masterBanner.classList.remove('hidden');
+      } else {
+        masterBanner.classList.add('hidden');
+      }
+    }
+
+    function answerQuiz(qIdx, oIdx) {
+      quizAnswers[qIdx] = oIdx;
+      renderQuiz();
+    }
+
+    // ==================== MODALS ====================
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ==================== INIT ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSorterItems();
+      loadHubData();
+      renderQuiz();
+    });
+  </script>
+</body>
+</html>

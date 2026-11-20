@@ -52,7 +52,7 @@
               Notion × Googleドライブ ハイブリッドマスター
             </h1>
             <span class="hidden sm:inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-              v1.3
+              v1.4
             </span>
           </div>
           <p class="text-[11px] text-slate-500 font-medium">
@@ -62,7 +62,7 @@
       </div>
       <div class="flex items-center gap-1.5">
         <button onclick="openModal('historyModal')" class="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-          🆕 v1.3 更新履歴
+          🆕 v1.4 更新履歴
         </button>
       </div>
     </div>
@@ -181,7 +181,7 @@
               <span class="font-bold text-blue-700">🧾 20_経理・確定申告_2026：</span> 領収書PDF・請求書・月次サマリー。
             </li>
             <li class="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-              <span class="font-bold text-blue-700">📘 30_業務マニュアル・契約 ／ 🎬 40_発信資産：</span> 契約書原本、動画MP4、サムネPNG、HTMLアプリ本体。
+              <span class="font-bold text-blue-700">📘 30_業務マニュアル・契約 ／ 🎬 40_発信資産：</span> 契約書原本、社内規約・届出書類・従業員・勤怠記録、動画MP4、サムネPNG、HTMLアプリ本体。
             </li>
           </ul>
         </div>
@@ -446,9 +446,9 @@
   <footer class="bg-white border-t border-slate-200 mt-10">
     <div class="max-w-5xl mx-auto px-4 py-5 space-y-2 text-[11px] text-slate-500">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <span class="font-bold text-slate-700">Notion × Googleドライブ ハイブリッドマスター (v1.3)</span>
+        <span class="font-bold text-slate-700">Notion × Googleドライブ ハイブリッドマスター (v1.4)</span>
         <button onclick="openModal('historyModal')" class="text-indigo-600 hover:underline font-bold">
-          📋 更新履歴（リリースノート）を見る (v1.3)
+          📋 更新履歴（リリースノート）を見る (v1.4)
         </button>
       </div>
       <p class="leading-relaxed">
@@ -468,9 +468,19 @@
         <button onclick="closeModal('historyModal')" class="text-slate-400 hover:text-slate-700 font-bold text-lg leading-none">&times;</button>
       </div>
       <div class="space-y-3 text-xs max-h-[65vh] overflow-y-auto pr-1">
+        <div class="p-3 rounded-xl bg-sky-50/80 border border-sky-200">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 rounded bg-sky-600 text-white text-[10px] font-black">v1.4 NEW</span>
+            <span class="font-bold text-slate-800">人事・労務・総務（社内規約・届出・従業員・勤怠）診断追加</span>
+          </div>
+          <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
+            <li>格納先診断に「👔 社内規約・官公庁届出・従業員情報・勤怠記録」項目を追加</li>
+            <li>個人情報・法務原本はGoogleドライブ（30_業務マニュアル・契約・規程）へ厳格管理し、Notionへは期限タスクと現場向け要約のみ連携するブリッジ基準を明文化</li>
+          </ul>
+        </div>
         <div class="p-3 rounded-xl bg-amber-50/80 border border-amber-200">
           <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-black">v1.3 NEW</span>
+            <span class="px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-black">v1.3</span>
             <span class="font-bold text-slate-800">全12アプリ完全網羅アップデート</span>
           </div>
           <ul class="list-disc list-inside text-slate-600 space-y-0.5 text-[11px]">
@@ -607,6 +617,16 @@
         place: 'Googleドライブ ＞ 30_業務マニュアル・契約・規程',
         reason: '法的効力のある原本PDFやスキャンデータは、フォルダ権限管理とバックアップが堅牢なGoogleドライブに保管します。',
         bridge: '現場で頻繁に見返す手順書だけは、Notionにテキスト要約を作り原本リンクを添えます。'
+      },
+      {
+        id: 'hr_compliance',
+        icon: '👔',
+        name: '社内規約・届出書類・従業員情報・勤怠記録',
+        keywords: '社内規約 就業規則 届出 運輸支局 従業員 スタッフ 個人情報 マイナンバー 勤怠 シフト 労務 総務',
+        dest: 'drive',
+        place: 'Googleドライブ ＞ 30_業務マニュアル・契約・規程（31_規約 / 32_届出控え / 33_従業員・勤怠）',
+        reason: '従業員の個人情報・雇用契約書・官公庁への届出控えPDFは、フォルダ単位の厳格な閲覧権限管理と変更履歴の追跡が可能なGoogleドライブが鉄則です。勤怠記録もスプレッドシート（GAS自動集計）で管理します。',
+        bridge: 'Notion側には「届出の提出期限タスク（①タスクDB）」と、従業員へ周知したい「現場ルールのテキスト要約（30_ナレッジ）」だけを配置します。'
       },
       {
         id: 'html_app',
